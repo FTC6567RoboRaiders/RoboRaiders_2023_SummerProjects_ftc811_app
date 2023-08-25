@@ -51,7 +51,6 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name="Basic: Linear OpMode", group="Linear Opmode")
-@Disabled
 public class minibots extends LinearOpMode {
 
     // Declare OpMode members.
@@ -92,10 +91,8 @@ public class minibots extends LinearOpMode {
 
             // POV Mode uses left stick to go forward, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
-            double drive = -gamepad1.left_stick_y;
-            double turn = gamepad1.right_stick_x;
-            leftPower = Range.clip(drive + turn, -1.0, 1.0) ;
-            rightPower = Range.clip(drive - turn, -1.0, 1.0) ;
+            double drive_left = -gamepad1.left_stick_y * 0.375;
+            double drive_right = -gamepad1.right_stick_y * 0.63; // both are 0.375 for the minibot with 2 stabilising wheels
 
             // Tank Mode uses one stick to control each wheel.
             // - This requires no math, but it is hard to drive forward slowly and keep straight.
@@ -103,12 +100,12 @@ public class minibots extends LinearOpMode {
             // rightPower = -gamepad1.right_stick_y ;
 
             // Send calculated power to wheels
-            leftDrive.setPower(leftPower);
-            rightDrive.setPower(rightPower);
+            leftDrive.setPower(drive_left);
+            rightDrive.setPower(drive_right);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+            telemetry.addData("Motors", "left (%.2f), right (%.2f)", drive_left, drive_right);
             telemetry.update();
         }
     }
